@@ -1,1 +1,1 @@
-worker: chong.py
+worker: python chong.py
