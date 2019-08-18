@@ -12,42 +12,42 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
-		return
+        return
 
     if message.content.lower().startswith('sigma'):
         await message.channel.send('Simba')
-		
-	await bot.process_commands(message)
+        
+    await bot.process_commands(message)
 
 
 @bot.command
 async def debug(ctx):
-	global roles
-	print(roles)
+    global roles
+    print(roles)
 
 
 @bot.command()
 async def welcome(ctx, *, data):
-	"""Creates a welcome message that will be tracked for reactions.
-	Data must be passed in using the format:
-	{"msg":"Message to be sent", "emoji1":"role1", "emoji2":"role2", ...}"""
+    """Creates a welcome message that will be tracked for reactions.
+    Data must be passed in using the format:
+    {"msg":"Message to be sent", "emoji1":"role1", "emoji2":"role2", ...}"""
 
-	processed = json.loads(data)
-	await welcome = ctx.message.channel.send(processed["msg"])
-	processed.pop("msg", None)
-	for emoji in processed.keys():
-		await welcome.add_reaction(emoji)
-	
-	global roles
-	roles = processed
-	await ctx.message.delete()
-	
+    processed = json.loads(data)
+    await welcome = ctx.message.channel.send(processed["msg"])
+    processed.pop("msg", None)
+    for emoji in processed.keys():
+        await welcome.add_reaction(emoji)
+    
+    global roles
+    roles = processed
+    await ctx.message.delete()
+    
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def shutdown():
-	await bot.close()
+    await bot.close()
 
 if __name__ == "__main__":
-	TOKEN = os.environ['token']
-	bot.run(TOKEN)
+    TOKEN = os.environ['token']
+    bot.run(TOKEN)
