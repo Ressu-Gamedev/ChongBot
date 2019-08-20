@@ -66,6 +66,8 @@ async def on_message_delete(message):
 async def on_raw_reaction_add(data):
     if not data.message_id == welcomeid:
         return
+    if data.user_id == bot.user.id:
+        return
     
     guild = await bot.fetch_guild(data.guild_id)
     user = await guild.fetch_member(data.user_id)
@@ -74,12 +76,12 @@ async def on_raw_reaction_add(data):
         await user.add_roles(guild.get_role(612573197220577282))  # Game Developer
     elif data.emoji.id == 613413242198294528:  # Mouse
         await user.add_roles(guild.get_role(613426397171679272))  # Gamer
-        await user.add_roles(get_role(612573326593884160))  # PC Gamer
+        await user.add_roles(guild.get_role(612573326593884160))  # PC Gamer
     elif data.emoji.id == 613412120964366342:  # Joycons
         await user.add_roles(guild.get_role(613426397171679272))  # Gamer
         await user.add_roles(guild.get_role(612573407338561546))  # Console Gamer
-    elif data.emoji.id == 613412120964366342:  # Ipsism
-        await user.add_roles(guild.get_role(613414843734818836))  # p
+    elif data.emoji.id == 613414843734818836:  # Ipsism
+        await user.add_roles(guild.get_role(612736383022530589))  # p
 
 
 @bot.event
@@ -94,12 +96,12 @@ async def on_raw_reaction_remove(data):
         await user.remove_roles(guild.get_role(612573197220577282))  # Game Developer
     elif data.emoji.id == 613413242198294528:  # Mouse
         await user.remove_roles(guild.get_role(613426397171679272))  # Gamer
-        await user.remove_roles(get_role(612573326593884160))  # PC Gamer
+        await user.remove_roles(guild.get_role(612573326593884160))  # PC Gamer
     elif data.emoji.id == 613412120964366342:  # Joycons
         await user.remove_roles(guild.get_role(613426397171679272))  # Gamer
         await user.remove_roles(guild.get_role(612573407338561546))  # Console Gamer
-    elif data.emoji.id == 613412120964366342:  # Ipsism
-        await user.remove_roles(guild.get_role(613414843734818836))  # p
+    elif data.emoji.id == 613414843734818836:  # Ipsism
+        await user.remove_roles(guild.get_role(612736383022530589))  # p
 
 
 @bot.command()
@@ -113,6 +115,11 @@ async def welcome(ctx):
     sent = await ctx.message.channel.send(welcomemsg)
     welcomeid = sent.id
     writeID()
+    
+    await sent.add_reaction(await ctx.message.guild.fetch_emoji(613412002479734813))
+    await sent.add_reaction(await ctx.message.guild.fetch_emoji(613413242198294528))
+    await sent.add_reaction(await ctx.message.guild.fetch_emoji(613412120964366342))
+    await sent.add_reaction(await ctx.message.guild.fetch_emoji(613414843734818836))
 
 
 @bot.command()
@@ -136,7 +143,7 @@ async def speak(ctx, *, msg):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
-async def shutdown():
+async def shutdown(ctx):
     await bot.close()
 
 
