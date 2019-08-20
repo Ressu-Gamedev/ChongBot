@@ -2,10 +2,44 @@ import os, discord, json
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='*')
-roles = {}
+
+welcomemsg = \
+"""
+This server has multiple roles you can freely enable and disable.
+These roles will give you access to their respective channels.
+Choose the roles you want by reacting to this message:
+    
+<:development:613412002479734813> - Game Development
+<:mouse:613413242198294528> - PC gamer
+<:joycons:613412120964366342> - Console Gamer
+<:ipsism:613414843734818836> - NSFW
+
+More roles (including per-game roles) will be added later as needed. Have fun!
+"""
+welcomeid = 0
+
+
+def writeID():
+    with open("welcome.id", "w+") as f:
+        f.write(str(welcomeid))
+
 
 @bot.event
 async def on_ready():
+    global welcomeid
+    
+    try:
+        open("welcome.id", "x").close()
+    except:
+        pass
+    
+    with open("welcome.id", "r+") as f:
+        welcomeid = f.read()
+        if welcomeid == "":
+            welcomeid = 0
+        else:
+            welcomeid = int(welcomeid)
+    
     print('Logged in as {0.user}'.format(bot))
 
 
@@ -20,33 +54,91 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
-@bot.command
-async def debug(ctx):
-    global roles
-    print(roles)
+@bot.event
+async def on_message_delete(message):
+    global welcomeid
+    if message.id == welcomeid:
+        welcomeid = 0
+    writeID()
+
+
+@bot.event
+async def on_raw_reaction_add(data):
+    if not data.message_id == welcomeid:
+        return
+    
+    guild = await bot.fetch_guild(data.guild_id)
+    user = await guild.fetch_member(data.user_id)
+    
+    if data.emoji.id == 613412002479734813:  # Development
+        await user.add_roles(guild.get_role(612573197220577282))  # Game Developer
+    elif data.emoji.id == 613413242198294528:  # Mouse
+        await user.add_roles(guild.get_role(613426397171679272))  # Gamer
+        await user.add_roles(get_role(612573326593884160))  # PC Gamer
+    elif data.emoji.id == 613412120964366342:  # Joycons
+        await user.add_roles(guild.get_role(613426397171679272))  # Gamer
+        await user.add_roles(guild.get_role(612573407338561546))  # Console Gamer
+    elif data.emoji.id == 613412120964366342:  # Ipsism
+        await user.add_roles(guild.get_role(613414843734818836))  # p
+
+
+@bot.event
+async def on_raw_reaction_remove(data):
+    if not data.message_id == welcomeid:
+        return
+    
+    guild = await bot.fetch_guild(data.guild_id)
+    user = await guild.fetch_member(data.user_id)
+    
+    if data.emoji.id == 613412002479734813:  # Development
+        await user.remove_roles(guild.get_role(612573197220577282))  # Game Developer
+    elif data.emoji.id == 613413242198294528:  # Mouse
+        await user.remove_roles(guild.get_role(613426397171679272))  # Gamer
+        await user.remove_roles(get_role(612573326593884160))  # PC Gamer
+    elif data.emoji.id == 613412120964366342:  # Joycons
+        await user.remove_roles(guild.get_role(613426397171679272))  # Gamer
+        await user.remove_roles(guild.get_role(612573407338561546))  # Console Gamer
+    elif data.emoji.id == 613412120964366342:  # Ipsism
+        await user.remove_roles(guild.get_role(613414843734818836))  # p
 
 
 @bot.command()
-async def welcome(ctx, *, data):
-    """Creates a welcome message that will be tracked for reactions.
-    Data must be passed in using the format:
-    {"msg":"Message to be sent", "emoji1":"role1", "emoji2":"role2", ...}"""
+@commands.has_permissions(administrator=True)
+async def welcome(ctx):
+    global welcomeid
+    if not welcomeid == 0:
+        await ctx.message.channel.send("There already exists a welcome message. Remove it first with *nowelcome.")
+        return
+    
+    sent = await ctx.message.channel.send(welcomemsg)
+    welcomeid = sent.id
+    writeID()
 
-    processed = json.loads(data)
-    await welcome = ctx.message.channel.send(processed["msg"])
-    processed.pop("msg", None)
-    for emoji in processed.keys():
-        await welcome.add_reaction(emoji)
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def nowelcome(ctx):
+    global welcomeid
+    if welcomeid == 0:
+        await ctx.message.channel.send("There is already no welcome message.")
+        return
     
-    global roles
-    roles = processed
+    welcomeid = 0
+    writeID()
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def speak(ctx, *, msg):
+    await ctx.message.channel.send(msg)
     await ctx.message.delete()
-    
+
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def shutdown():
     await bot.close()
+
 
 if __name__ == "__main__":
     TOKEN = os.environ['token']
