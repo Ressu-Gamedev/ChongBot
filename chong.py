@@ -134,7 +134,7 @@ async def welcome(ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def pingkids(ctx):
-	for kid in bot.users:
+	for kid in ctx.guild.members:
 		if kid.roles == []:
 			await kid.create_dm()
 			await kid.dm_channel.send(welcomedm)
