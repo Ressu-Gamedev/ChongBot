@@ -156,7 +156,7 @@ async def nowelcome(ctx):
 @commands.has_permissions(administrator=True)
 async def setwelcome(ctx, id):
 	global welcomeid
-	welcomeid = id
+	welcomeid = int(id)
 	writeID()
 
 
