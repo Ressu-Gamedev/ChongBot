@@ -16,6 +16,15 @@ Choose the roles you want by reacting to this message:
 
 More roles (including per-game roles) will be added later as needed. Have fun!
 """
+welcomedm = \
+"""
+Welcome to the Ressu Gamedev/eSports/Gaming Discord!
+Check the <#613446760563474442> channel to get your roles and access new channels.
+Please also set your server nickname to your real name.
+
+Game on!
+ChongBot:tm:
+"""
 welcomeid = 0
 
 
@@ -120,6 +129,15 @@ async def welcome(ctx):
     await sent.add_reaction(await ctx.message.guild.fetch_emoji(613413242198294528))
     await sent.add_reaction(await ctx.message.guild.fetch_emoji(613412120964366342))
     await sent.add_reaction(await ctx.message.guild.fetch_emoji(613414843734818836))
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def pingkids(ctx):
+	for kid in bot.users:
+		if kid.roles == []:
+			await kid.create_dm()
+			await kid.dm_channel.send(welcomedm)
 
 
 @bot.command()
