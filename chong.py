@@ -154,6 +154,14 @@ async def nowelcome(ctx):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
+async def setwelcome(ctx, id):
+	global welcomeid
+	welcomeid = id
+	writeID()
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
 async def speak(ctx, *, msg):
     await ctx.message.channel.send(msg)
     await ctx.message.delete()
