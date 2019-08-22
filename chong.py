@@ -20,7 +20,7 @@ welcomedm = \
 """
 Welcome to the Ressu Gamedev/eSports/Gaming Discord!
 Check the <#613446760563474442> channel to get your roles and access new channels.
-Please also set your server nickname to your real name.
+Please also set your server nickname to your real name, so that everyone gets to know each other.
 
 Game on!
 ChongBot:tm:
@@ -113,6 +113,11 @@ async def on_raw_reaction_remove(data):
         await user.remove_roles(guild.get_role(612736383022530589))  # p
 
 
+@bot.event
+async def on_member_join(member):
+    member.send(welcomedm)
+
+
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def welcome(ctx):
@@ -134,10 +139,9 @@ async def welcome(ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def pingkids(ctx):
-	for kid in ctx.guild.members:
-		if kid.roles == []:
-			await kid.create_dm()
-			await kid.dm_channel.send(welcomedm)
+    for kid in ctx.guild.members:
+        if len(kid.roles) == 1:
+            await kid.send(welcomedm)
 
 
 @bot.command()
