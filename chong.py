@@ -6,15 +6,26 @@ bot = commands.Bot(command_prefix='*')
 welcomemsg = \
 """
 This server has multiple roles you can freely enable and disable.
-These roles will give you access to their respective channels.
+Some roles will give you access to their respective channels.
 Choose the roles you want by reacting to this message:
     
 <:development:613412002479734813> - Game Development
-<:mouse:613413242198294528> - PC gamer
-<:joycons:613412120964366342> - Console Gamer
+
+<:smashball:614108654249050123> - Smash Bros
+<:ow:614108644736368659> - Overwatch
+<:csgo:614108639392825364> - CS:GO
+<:ffxiv:614108647840153640> - FFXIV
+<:league:614108654949367808> - League of Legends
+<:tft:614108654282604567> - League + TFT
+<:creeper:614108636230451211> - Minecraft
+
+<:mouse:613413242198294528> - Other PC Games
+<:nnid:614109123373694988> - Other Nintendo Games
+<:joycons:613412120964366342> - Other Console Games
 <:ipsism:613414843734818836> - NSFW
 
-More roles (including per-game roles) will be added later as needed. Have fun!
+All roles will also give you their sub-roles (e.g. Overwatch will give you the Gamer, PC Gamer, and Overwatch roles)
+Have fun!
 """
 welcomedm = \
 """
@@ -25,6 +36,66 @@ Please also set your server nickname to your real name, so that everyone gets to
 Game on!
 ChongBot:tm:
 """
+
+rolelist = {                 # {emote1ID : [role1ID, role2ID, ...], ...}
+    613412002479734813 : [   # Development
+        612573197220577282,   # Game Developer
+    ],
+    614108654249050123 : [   # Smash
+        613426397171679272,  # Gamer
+        612573407338561546,   # Console Gamer
+        614067814084509697,   # Nintendo
+        614067488220512256,   # Smash
+    ],
+    614108644736368659 : [   # Overwatch
+        613426397171679272,  # Gamer
+        612573326593884160,   # PC Gamer
+        614066924414042123,   # Overwatch
+    ],
+    614108639392825364 : [   # CS:GO
+        613426397171679272,  # Gamer
+        612573326593884160,   # PC Gamer
+        614067014037667851,   # CS:GO
+    ],
+    614108647840153640 : [   # FFXIV
+        613426397171679272,  # Gamer
+        612573326593884160,   # PC Gamer
+        614067221144272896,   # FFXIV
+    ],
+    614108654949367808 : [   # League
+        613426397171679272,  # Gamer
+        612573326593884160,   # PC Gamer
+        614066826925572097   # League 
+    ],
+    614108654282604567 : [   # TFT
+        613426397171679272,  # Gamer
+        612573326593884160,   # PC Gamer
+        614066826925572097,   # League
+        614067306750017559,   # TFT
+    ],
+    614108636230451211 : [   # Creeper
+        613426397171679272,  # Gamer
+        612573326593884160,   # PC Gamer
+        614067866609778708,   # Minecraft
+    ],
+    613413242198294528 : [   # Mouse (Other PC Gamer)
+        613426397171679272,  # Gamer
+        612573326593884160,   # PC Gamer
+    ],
+    613412120964366342 : [   # Joycons (Other Console Gamer)
+        613426397171679272,  # Gamer
+        612573407338561546,   # Console Gamer
+    ],
+    614109123373694988 : [   # NNID (Other Nintendo)
+        613426397171679272,  # Gamer
+        612573407338561546,   # Console Gamer
+        614067814084509697,   # Nintendo
+    ],
+    613414843734818836 : [   # Ipsism
+        612736383022530589,   # p
+    ],
+}
+
 welcomeid = 0
 
 
@@ -77,40 +148,28 @@ async def on_raw_reaction_add(data):
         return
     if data.user_id == bot.user.id:
         return
+    if not data.emoji.id in rolelist:
+        return
     
     guild = await bot.fetch_guild(data.guild_id)
     user = await guild.fetch_member(data.user_id)
     
-    if data.emoji.id == 613412002479734813:  # Development
-        await user.add_roles(guild.get_role(612573197220577282))  # Game Developer
-    elif data.emoji.id == 613413242198294528:  # Mouse
-        await user.add_roles(guild.get_role(613426397171679272))  # Gamer
-        await user.add_roles(guild.get_role(612573326593884160))  # PC Gamer
-    elif data.emoji.id == 613412120964366342:  # Joycons
-        await user.add_roles(guild.get_role(613426397171679272))  # Gamer
-        await user.add_roles(guild.get_role(612573407338561546))  # Console Gamer
-    elif data.emoji.id == 613414843734818836:  # Ipsism
-        await user.add_roles(guild.get_role(612736383022530589))  # p
+    await user.add_roles(*[guild.get_role(id) for id in rolelist[data.emoji.id]])
 
 
 @bot.event
 async def on_raw_reaction_remove(data):
     if not data.message_id == welcomeid:
         return
+    if data.user_id == bot.user.id:
+        return
+    if not data.emoji.id in rolelist:
+        return
     
     guild = await bot.fetch_guild(data.guild_id)
     user = await guild.fetch_member(data.user_id)
     
-    if data.emoji.id == 613412002479734813:  # Development
-        await user.remove_roles(guild.get_role(612573197220577282))  # Game Developer
-    elif data.emoji.id == 613413242198294528:  # Mouse
-        await user.remove_roles(guild.get_role(613426397171679272))  # Gamer
-        await user.remove_roles(guild.get_role(612573326593884160))  # PC Gamer
-    elif data.emoji.id == 613412120964366342:  # Joycons
-        await user.remove_roles(guild.get_role(613426397171679272))  # Gamer
-        await user.remove_roles(guild.get_role(612573407338561546))  # Console Gamer
-    elif data.emoji.id == 613414843734818836:  # Ipsism
-        await user.remove_roles(guild.get_role(612736383022530589))  # p
+    await user.remove_roles(*[guild.get_role(id) for id in rolelist[data.emoji.id]])
 
 
 @bot.event
@@ -127,13 +186,12 @@ async def welcome(ctx):
         return
     
     sent = await ctx.message.channel.send(welcomemsg)
+    await ctx.message.delete()
     welcomeid = sent.id
     writeID()
     
-    await sent.add_reaction(await ctx.message.guild.fetch_emoji(613412002479734813))
-    await sent.add_reaction(await ctx.message.guild.fetch_emoji(613413242198294528))
-    await sent.add_reaction(await ctx.message.guild.fetch_emoji(613412120964366342))
-    await sent.add_reaction(await ctx.message.guild.fetch_emoji(613414843734818836))
+    for emote in rolelist.keys():
+        await sent.add_reaction(await ctx.message.guild.fetch_emoji(emote))
 
 
 @bot.command()
@@ -171,7 +229,7 @@ async def speak(ctx, *, msg):
     await ctx.message.delete()
 
 
-@bot.command()
+@bot.command(aliases=["sd"])
 @commands.has_permissions(administrator=True)
 async def shutdown(ctx):
     await bot.close()
