@@ -96,29 +96,19 @@ rolelist = {                 # {emote1ID : [role1ID, role2ID, ...], ...}
     ],
 }
 
-welcomeid = 0
+
+def writeID(id):
+    os.environ["welcomeid"] = str(id)
 
 
-def writeID():
-    with open("welcome.id", "w+") as f:
-        f.write(str(welcomeid))
+def getID():
+    return int(os.environ["welcomeid"])
 
 
 @bot.event
 async def on_ready():
-    global welcomeid
-    
-    try:
-        open("welcome.id", "x").close()
-    except:
-        pass
-    
-    with open("welcome.id", "r+") as f:
-        welcomeid = f.read()
-        if welcomeid == "":
-            welcomeid = 0
-        else:
-            welcomeid = int(welcomeid)
+    if not "WELCOMEID" in os.environ:
+        writeID(0)
     
     print('Logged in as {0.user}'.format(bot))
 
@@ -136,15 +126,13 @@ async def on_message(message):
 
 @bot.event
 async def on_message_delete(message):
-    global welcomeid
-    if message.id == welcomeid:
-        welcomeid = 0
-    writeID()
+    if message.id == getID():
+        writeID(0)
 
 
 @bot.event
 async def on_raw_reaction_add(data):
-    if not data.message_id == welcomeid:
+    if not data.message_id == getID():
         return
     if data.user_id == bot.user.id:
         return
@@ -159,7 +147,7 @@ async def on_raw_reaction_add(data):
 
 @bot.event
 async def on_raw_reaction_remove(data):
-    if not data.message_id == welcomeid:
+    if not data.message_id == getID():
         return
     if data.user_id == bot.user.id:
         return
@@ -180,15 +168,13 @@ async def on_member_join(member):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def welcome(ctx):
-    global welcomeid
-    if not welcomeid == 0:
+    if not getID() == 0:
         await ctx.message.channel.send("There already exists a welcome message. Remove it first with *nowelcome.")
         return
     
     sent = await ctx.message.channel.send(welcomemsg)
     await ctx.message.delete()
-    welcomeid = sent.id
-    writeID()
+    writeID(sent.id)
     
     for emote in rolelist.keys():
         await sent.add_reaction(await ctx.message.guild.fetch_emoji(emote))
@@ -205,21 +191,23 @@ async def pingkids(ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def nowelcome(ctx):
-    global welcomeid
-    if welcomeid == 0:
+    if getID() == 0:
         await ctx.message.channel.send("There is already no welcome message.")
         return
     
-    welcomeid = 0
-    writeID()
+    writeID(0)
 
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def setwelcome(ctx, id):
-	global welcomeid
-	welcomeid = int(id)
-	writeID()
+	writeID(id)
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def printwelcome(ctx):
+    await ctx.message.channel.send(getID())
 
 
 @bot.command()
