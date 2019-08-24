@@ -107,7 +107,7 @@ def getID():
 
 @bot.event
 async def on_ready():
-    if not "WELCOMEID" in os.environ:
+    if not "welcomeid" in os.environ:
         writeID(0)
     
     print('Logged in as {0.user}'.format(bot))
@@ -208,6 +208,7 @@ async def setwelcome(ctx, id):
 @commands.has_permissions(administrator=True)
 async def printwelcome(ctx):
     await ctx.message.channel.send(getID())
+    await ctx.message.channel.send(os.environ)
 
 
 @bot.command()
