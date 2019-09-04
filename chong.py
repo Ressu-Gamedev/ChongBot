@@ -1,7 +1,8 @@
-import os, discord
+import os, discord, wolframalpha
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='*')
+wolframclient = wolframalpha.Client(os.environ['wolframid'])
 
 welcomemsg = \
 """
@@ -176,6 +177,14 @@ async def on_raw_reaction_remove(data):
 @bot.event
 async def on_member_join(member):
     member.send(welcomedm)
+
+
+@bot.command()
+async def solve(ctx, *, equation):
+	async with ctx.channel.typing():
+		res = wolframclient.query(equation)
+		answer = next(res.results).text
+		await ctx.message.channel.send(answer)
 
 
 @bot.command()
