@@ -1,4 +1,4 @@
-import os, discord, json
+import os, discord
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='*')
@@ -14,17 +14,21 @@ Choose the roles you want by reacting to this message:
 <:smashball:614108654249050123> - Smash Bros
 <:ow:614108644736368659> - Overwatch
 <:csgo:614108639392825364> - CS:GO
-<:ffxiv:614108647840153640> - FFXIV
+<:ffxiv:614108647840153640> - FFXIV (and other MMOs)
 <:league:614108654949367808> - League of Legends
 <:tft:614108654282604567> - League + TFT
 <:creeper:614108636230451211> - Minecraft
+<:osu:618694109032349705> - Osu!
+<:wow:618712696509956107> - World of Warcraft
 
-<:mouse:613413242198294528> - Other PC Games
+<:fortnite:618689756477521920> - Fortnite
+
 <:nnid:614109123373694988> - Other Nintendo Games
-<:joycons:613412120964366342> - Other Console Games
+<:questionblock:618688348118319124> - Other Games
 <:ipsism:613414843734818836> - NSFW
 
-All roles will also give you their sub-roles (e.g. Overwatch will give you the Gamer, PC Gamer, and Overwatch roles)
+All roles will also give you their sub-roles (e.g. Overwatch will give you both the Gamer and Overwatch roles)
+All roles are pingable. Feel free to ping an entire role to call in people to play with you!
 Have fun!
 """
 welcomedm = \
@@ -36,63 +40,68 @@ Please also set your server nickname to your real name, so that everyone gets to
 Game on!
 ChongBot:tm:
 """
+kickdm = \
+"""
+You have been kicked from the Ressu Gamers server for the reason:
+FORTNITE IS BANNED.
 
-rolelist = {                 # {emote1ID : [role1ID, role2ID, ...], ...}
-    613412002479734813 : [   # Development
-        612573197220577282,   # Game Developer
+You may rejoin the server using the permanent invite link: https://discord.gg/A635RGS
+"""
+
+rolelist = {  # {emote1ID : [role1ID, role2ID, ...], ...}
+    613412002479734813 : [    # Development
+        612573197220577282,  # Game Developer
     ],
-    614108654249050123 : [   # Smash
+    614108654249050123 : [    # Smash
         613426397171679272,  # Gamer
-        612573407338561546,   # Console Gamer
-        614067814084509697,   # Nintendo
-        614067488220512256,   # Smash
+        614067814084509697,  # Nintendo
+        614067488220512256,  # Smash
     ],
-    614108644736368659 : [   # Overwatch
+    614108644736368659 : [    # Overwatch
         613426397171679272,  # Gamer
-        612573326593884160,   # PC Gamer
-        614066924414042123,   # Overwatch
+        614066924414042123,  # Overwatch
     ],
-    614108639392825364 : [   # CS:GO
+    614108639392825364 : [    # CS:GO
         613426397171679272,  # Gamer
-        612573326593884160,   # PC Gamer
-        614067014037667851,   # CS:GO
+        614067014037667851,  # CS:GO
     ],
-    614108647840153640 : [   # FFXIV
+    614108647840153640 : [    # FFXIV
         613426397171679272,  # Gamer
-        612573326593884160,   # PC Gamer
-        614067221144272896,   # FFXIV
+        614067221144272896,  # FFXIV
     ],
-    614108654949367808 : [   # League
+    614108654949367808 : [    # League
         613426397171679272,  # Gamer
-        612573326593884160,   # PC Gamer
         614066826925572097   # League 
     ],
-    614108654282604567 : [   # TFT
+    614108654282604567 : [    # TFT
         613426397171679272,  # Gamer
-        612573326593884160,   # PC Gamer
-        614066826925572097,   # League
-        614067306750017559,   # TFT
+        614066826925572097,  # League
+        614067306750017559,  # TFT
     ],
-    614108636230451211 : [   # Creeper
+    614108636230451211 : [    # Creeper
         613426397171679272,  # Gamer
-        612573326593884160,   # PC Gamer
-        614067866609778708,   # Minecraft
+        614067866609778708,  # Minecraft
     ],
-    613413242198294528 : [   # Mouse (Other PC Gamer)
+    618694109032349705 : [    # Osu
         613426397171679272,  # Gamer
-        612573326593884160,   # PC Gamer
+        618693820778938369,  # Osu!
     ],
-    613412120964366342 : [   # Joycons (Other Console Gamer)
+    618712696509956107 : [    # WOW
         613426397171679272,  # Gamer
-        612573407338561546,   # Console Gamer
+        618713078204334081,  # World of Warcraft
     ],
-    614109123373694988 : [   # NNID (Other Nintendo)
+    618689756477521920 : [    # Fortnite
+                             # Nothing, as it kicks the user
+    ],
+    618688348118319124 : [    # Mouse (Other Games)
         613426397171679272,  # Gamer
-        612573407338561546,   # Console Gamer
-        614067814084509697,   # Nintendo
     ],
-    613414843734818836 : [   # Ipsism
-        612736383022530589,   # p
+    614109123373694988 : [    # NNID (Other Nintendo)
+        613426397171679272,  # Gamer
+        614067814084509697,  # Nintendo
+    ],
+    613414843734818836 : [    # Ipsism
+        612736383022530589,  # p
     ],
 }
 
@@ -143,6 +152,10 @@ async def on_raw_reaction_add(data):
     user = await guild.fetch_member(data.user_id)
     
     await user.add_roles(*[guild.get_role(id) for id in rolelist[data.emoji.id]])
+    
+    if data.emoji.id == 618689756477521920:  # Fortnite ban
+        await user.send(kickdm)
+        await user.kick()
 
 
 @bot.event
@@ -168,12 +181,12 @@ async def on_member_join(member):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def welcome(ctx):
+    await ctx.message.delete()
     if not getID() == 0:
         await ctx.message.channel.send("There already exists a welcome message. Remove it first with *nowelcome.")
         return
     
     sent = await ctx.message.channel.send(welcomemsg)
-    await ctx.message.delete()
     writeID(sent.id)
     
     for emote in rolelist.keys():
@@ -183,6 +196,7 @@ async def welcome(ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def pingkids(ctx):
+    await ctx.message.delete()
     for kid in ctx.guild.members:
         if len(kid.roles) == 1:
             await kid.send(welcomedm)
@@ -191,6 +205,7 @@ async def pingkids(ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def nowelcome(ctx):
+    await ctx.message.delete()
     if getID() == 0:
         await ctx.message.channel.send("There is already no welcome message.")
         return
@@ -200,15 +215,29 @@ async def nowelcome(ctx):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
+async def updatewelcome(ctx):
+    await ctx.message.delete()
+    if getID() == 0:
+        await ctx.message.channel.send("There is no welcome message.")
+        return
+    
+    fetchedwelcome = await ctx.fetch_message(getID())
+    await fetchedwelcome.edit(content=welcomemsg)
+    
+    for emote in rolelist.keys():
+        await fetchedwelcome.add_reaction(await ctx.message.guild.fetch_emoji(emote))
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
 async def setwelcome(ctx, id):
-	writeID(id)
+    writeID(id)
 
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def printwelcome(ctx):
     await ctx.message.channel.send(getID())
-    await ctx.message.channel.send(os.environ)
 
 
 @bot.command()
