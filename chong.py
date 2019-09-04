@@ -180,11 +180,20 @@ async def on_member_join(member):
 
 
 @bot.command()
+@commands.cooldown(1, 17)
 async def solve(ctx, *, equation):
-	async with ctx.channel.typing():
-		res = wolframclient.query(equation)
-		answer = next(res.results).text
-		await ctx.message.channel.send(answer)
+    async with ctx.channel.typing():
+        res = wolframclient.query(equation)
+        answer = next(res.results).text
+        await ctx.message.channel.send(answer)
+
+
+@solve.error
+async def on_commannd_error(ctx, error):
+    if isinstance(error, commands.errors.CommandOnCooldown):
+        await ctx.message.channel.send(f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s.")
+    else:
+        raise(error)
 
 
 @bot.command()
