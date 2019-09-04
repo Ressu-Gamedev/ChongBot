@@ -180,12 +180,16 @@ async def on_member_join(member):
 
 
 @bot.command()
-@commands.cooldown(1, 17)
+@commands.cooldown(1, 10)
 async def solve(ctx, *, equation):
+    answer = ""
     async with ctx.channel.typing():
         res = wolframclient.query(equation)
-        answer = next(res.results).text
-        await ctx.message.channel.send(answer)
+        try:
+            answer = next(res.results).text
+        except (AttributeError, StopIteration) as e:
+            answer = "Your query is invalid. Please try again."
+    await ctx.message.channel.send(answer)
 
 
 @solve.error
