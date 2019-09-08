@@ -111,6 +111,7 @@ def writeID(id):
     os.environ["welcomeid"] = str(id)
 
 
+    
 def getID():
     return int(os.environ["welcomeid"])
 
@@ -274,6 +275,20 @@ async def speak(ctx, *, msg):
 async def shutdown(ctx):
     await bot.close()
 
+@client.command
+async def logout():
+    await client.logout()
+async def game_presence():
+    await client.wait_until_ready()
+    activeServers = client.guilds
+    summ = 0
+    for s in activeServers:
+        summ += len(s.members)          
+    await client.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{summ} students"))
+    await asyncio.sleep(3600)
+    await game_presence()
+    
+client.loop.create_task(game_presence())
 
 if __name__ == "__main__":
     TOKEN = os.environ['token']
