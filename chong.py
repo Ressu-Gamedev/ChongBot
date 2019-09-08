@@ -281,3 +281,15 @@ async def shutdown(ctx):
 if __name__ == "__main__":
     TOKEN = os.environ['token']
     bot.run(TOKEN)
+    
+async def game_presence():
+    await bot.wait_until_ready()
+    activeServers = bot.guilds
+    summ = 0
+    for s in activeServers:
+        summ += len(s.members)          
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{summ} students"))
+    await asyncio.sleep(3600)
+    await game_presence()
+    
+bot.loop.create_task(game_presence())
