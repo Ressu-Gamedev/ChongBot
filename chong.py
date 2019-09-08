@@ -1,4 +1,4 @@
-import os, discord, wolframalpha
+import os, discord, wolframalpha, asyncio
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='=')
