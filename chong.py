@@ -1,7 +1,7 @@
 import os, discord, wolframalpha
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix='*')
+bot = commands.Bot(command_prefix='=')
 wolframclient = wolframalpha.Client(os.environ['wolframid'])
 
 welcomemsg = \
@@ -181,21 +181,23 @@ async def on_member_join(member):
 
 @bot.command()
 @commands.cooldown(1, 10)
-async def solve(ctx, *, equation):
+async def solve(ctx, *, query):
     answer = ""
     async with ctx.channel.typing():
-        res = wolframclient.query(equation)
+        res = wolframclient.query(query)
         try:
             answer = next(res.results).text
         except (AttributeError, StopIteration) as e:
             answer = "Your query is invalid. Please try again."
-    await ctx.message.channel.send(answer)
+    await ctx.send(f"Query: `{query}`\n{answer}")
 
 
 @solve.error
 async def on_commannd_error(ctx, error):
     if isinstance(error, commands.errors.CommandOnCooldown):
-        await ctx.message.channel.send(f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s.")
+        await ctx.send(f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s.")
+    elif isinstance(error, commands.errors.MissingRequiredArgument):
+        await ctx.send(f"Usage: `=solve <query>`")
     else:
         raise(error)
 
@@ -205,10 +207,10 @@ async def on_commannd_error(ctx, error):
 async def welcome(ctx):
     await ctx.message.delete()
     if not getID() == 0:
-        await ctx.message.channel.send("There already exists a welcome message. Remove it first with *nowelcome.")
+        await ctx.send(f"There already exists a welcome message. Remove it first with =nowelcome.")
         return
     
-    sent = await ctx.message.channel.send(welcomemsg)
+    sent = await ctx.send(welcomemsg)
     writeID(sent.id)
     
     for emote in rolelist.keys():
@@ -229,7 +231,7 @@ async def pingkids(ctx):
 async def nowelcome(ctx):
     await ctx.message.delete()
     if getID() == 0:
-        await ctx.message.channel.send("There is already no welcome message.")
+        await ctx.send("There is already no welcome message.")
         return
     
     writeID(0)
@@ -240,7 +242,7 @@ async def nowelcome(ctx):
 async def updatewelcome(ctx):
     await ctx.message.delete()
     if getID() == 0:
-        await ctx.message.channel.send("There is no welcome message.")
+        await ctx.send("There is no welcome message.")
         return
     
     fetchedwelcome = await ctx.fetch_message(getID())
@@ -259,19 +261,20 @@ async def setwelcome(ctx, id):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def printwelcome(ctx):
-    await ctx.message.channel.send(getID())
+    await ctx.send(getID())
 
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def speak(ctx, *, msg):
-    await ctx.message.channel.send(msg)
+    await ctx.send(msg)
     await ctx.message.delete()
 
 
 @bot.command(aliases=["sd"])
 @commands.has_permissions(administrator=True)
 async def shutdown(ctx):
+    await ctx.send("Bye bye")
     await bot.close()
 
 
