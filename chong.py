@@ -282,7 +282,7 @@ async def game_presence():
     activeServers = bot.guilds
     summ = 0
     for s in activeServers:
-        summ += len(s.members)          
+        summ += len(s.members)-1          
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{summ} students"))
     await asyncio.sleep(3600)
     await game_presence()
