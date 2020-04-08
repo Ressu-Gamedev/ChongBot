@@ -271,6 +271,15 @@ async def speak(ctx, *, msg):
     await ctx.message.delete()
 
 
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def fortnite(ctx, user: discord.User, *, message):
+    await ctx.send("The user {}#{} has been permanently banned for {}.".format(user.name, user.discriminator, message))
+    await user.send("You have been permanently banned from Ressu Gamers for {}. This ban is non-negotiable and does not expire.".format(message))
+    await ctx.message.delete()
+    await ctx.guild.ban(user, reason=message, delete_message_days=0)
+
+
 @bot.command(aliases=["sd"])
 @commands.has_permissions(administrator=True)
 async def shutdown(ctx):
