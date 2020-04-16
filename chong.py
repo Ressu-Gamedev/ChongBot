@@ -279,7 +279,7 @@ async def moveall(ctx, tovc: discord.VoiceChannel = None, fromvc: discord.VoiceC
     if fromvc == None or tovc == None:  # we go agane
         ctx.send("Invalid command. Try joining a voice channel. Usage: =moveall [tovc] [fromvc]")
     
-    for member in fromvc.memebers:
+    for member in fromvc.members:
         member.move_to(tovc)
 
 
