@@ -275,7 +275,7 @@ async def moveall(ctx, tovc: discord.VoiceChannel = None, fromvc: discord.VoiceC
     if fromvc == None:
         fromvc = ctx.author.voice.channel
     if tovc == None:
-        tovc = await discord.utils.get(ctx.guild.voice_channels, name="General")
+        tovc = discord.utils.get(ctx.guild.voice_channels, name="General")
     if fromvc == None or tovc == None:  # we go agane
         await ctx.send("Invalid command. Try joining a voice channel. Usage: =moveall [tovc] [fromvc]")
     
