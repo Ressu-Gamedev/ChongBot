@@ -271,6 +271,7 @@ async def pingkids(ctx):
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def moveall(ctx, tovc: discord.VoiceChannel = None, fromvc: discord.VoiceChannel = None):
+    await ctx.message.delete()
     if fromvc == None:
         fromvc = ctx.author.voice.channel
     if tovc == None:
@@ -278,8 +279,8 @@ async def moveall(ctx, tovc: discord.VoiceChannel = None, fromvc: discord.VoiceC
     if fromvc == None or tovc == None:  # we go agane
         ctx.send("Invalid command. Try joining a voice channel. Usage: =moveall [tovc] [fromvc]")
     
-    await ctx.send("To voice: " + tovc.name)
-    await ctx.send("From voice: " + fromvc.name)
+    for member in fromvc.memebers:
+        member.move_to(tovc)
 
 
 @bot.command(aliases=["sd"])
