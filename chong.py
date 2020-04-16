@@ -179,27 +179,15 @@ async def on_member_join(member):
     member.send(welcomedm)
 
 
-@bot.command()
-@commands.cooldown(1, 10)
-async def solve(ctx, *, query):
-    answer = ""
-    async with ctx.channel.typing():
-        res = wolframclient.query(query)
-        try:
-            answer = next(res.results).text
-        except (AttributeError, StopIteration) as e:
-            answer = "Your query is invalid. Please try again."
-    await ctx.send(f"Query: `{query}`\n{answer}")
-
-
-@solve.error
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.errors.CommandOnCooldown):
-        await ctx.send(f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s.")
-    elif isinstance(error, commands.errors.MissingRequiredArgument):
-        await ctx.send(f"Usage: `=solve <query>`")
-    else:
-        raise(error)
+async def game_presence():
+    await bot.wait_until_ready()
+    activeServers = bot.guilds
+    summ = 0
+    for s in activeServers:
+        summ += len(s.members)-1          
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{summ} students"))
+    await asyncio.sleep(3600)
+    await game_presence()
 
 
 @bot.command()
@@ -215,15 +203,6 @@ async def welcome(ctx):
     
     for emote in rolelist.keys():
         await sent.add_reaction(await ctx.message.guild.fetch_emoji(emote))
-
-
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def pingkids(ctx):
-    await ctx.message.delete()
-    for kid in ctx.guild.members:
-        if len(kid.roles) == 1:
-            await kid.send(welcomedm)
 
 
 @bot.command()
@@ -280,21 +259,51 @@ async def fortnite(ctx, user: discord.User, *, message="Fortnite 🤡"):
     await ctx.guild.ban(user, reason=message, delete_message_days=0)
 
 
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def pingkids(ctx):
+    await ctx.message.delete()
+    for kid in ctx.guild.members:
+        if len(kid.roles) == 1:
+            await kid.send(welcomedm)
+
+
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def moveall(ctx, tovc="General": discord.VoiceChannel, fromvc="": discord.VoiceChannel):
+    if from_vc = None:
+        fromvc = ctx.author.voice.channel
+    await ctx.send("From voice: " + fromvc.name)
+
+
 @bot.command(aliases=["sd"])
 @commands.has_permissions(administrator=True)
 async def shutdown(ctx):
     await ctx.send("Bye bye")
     await bot.close()
 
-async def game_presence():
-    await bot.wait_until_ready()
-    activeServers = bot.guilds
-    summ = 0
-    for s in activeServers:
-        summ += len(s.members)-1          
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{summ} students"))
-    await asyncio.sleep(3600)
-    await game_presence()
+
+@bot.command()
+@commands.cooldown(1, 10)
+async def solve(ctx, *, query):
+    answer = ""
+    async with ctx.channel.typing():
+        res = wolframclient.query(query)
+        try:
+            answer = next(res.results).text
+        except (AttributeError, StopIteration) as e:
+            answer = "Your query is invalid. Please try again."
+    await ctx.send(f"Query: `{query}`\n{answer}")
+
+
+@solve.error
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.errors.CommandOnCooldown):
+        await ctx.send(f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s.")
+    elif isinstance(error, commands.errors.MissingRequiredArgument):
+        await ctx.send(f"Usage: `=solve <query>`")
+    else:
+        raise(error)
 
 
 if __name__ == "__main__":
