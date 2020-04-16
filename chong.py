@@ -193,7 +193,7 @@ async def solve(ctx, *, query):
 
 
 @solve.error
-async def on_commannd_error(ctx, error):
+async def on_command_error(ctx, error):
     if isinstance(error, commands.errors.CommandOnCooldown):
         await ctx.send(f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s.")
     elif isinstance(error, commands.errors.MissingRequiredArgument):
