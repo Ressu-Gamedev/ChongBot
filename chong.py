@@ -270,7 +270,7 @@ async def pingkids(ctx):
 
 @bot.command()
 @commands.has_permissions(administrator=True)
-async def moveall(ctx, tovc="General": discord.VoiceChannel, fromvc="": discord.VoiceChannel):
+async def moveall(ctx, tovc: discord.VoiceChannel = "General", fromvc: discord.VoiceChannel = None):
     if from_vc = None:
         fromvc = ctx.author.voice.channel
     await ctx.send("From voice: " + fromvc.name)
