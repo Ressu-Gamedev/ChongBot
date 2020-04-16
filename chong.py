@@ -273,6 +273,9 @@ async def pingkids(ctx):
 async def moveall(ctx, tovc: discord.VoiceChannel = "General", fromvc: discord.VoiceChannel = None):
     if fromvc == None:
         fromvc = ctx.author.voice.channel
+        if fromvc == None:  # we go agane
+            ctx.send("Invalid command. Join a voice channel or use the form =moveall <tovc> <fromvc>")
+    await ctx.send("To voice: " + tovc.name)
     await ctx.send("From voice: " + fromvc.name)
 
 
