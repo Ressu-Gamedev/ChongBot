@@ -176,7 +176,7 @@ async def on_raw_reaction_remove(data):
 
 @bot.event
 async def on_member_join(member):
-    member.send(welcomedm)
+    await member.send(welcomedm)
 
 
 async def game_presence():
