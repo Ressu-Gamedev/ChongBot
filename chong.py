@@ -183,7 +183,7 @@ async def on_raw_reaction_remove(data):
 @bot.event
 async def on_member_join(member):
     await member.send(welcomedm)
-    general = bot.get_channel(613779603877789717)
+    general = bot.get_channel(613436762257358878)
     await general.send(welcomegeneral.format(member.mention))
 
 
