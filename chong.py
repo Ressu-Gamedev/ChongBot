@@ -34,12 +34,18 @@ Have fun!
 """
 welcomedm = \
 """
-Welcome to the Ressu Gamedev/eSports/Gaming Discord!
+Welcome to the Ressu Gamers Discord!
+We have channels for both gaming and game development.
 Check the <#613446760563474442> channel to get your roles and access new channels.
 Please also set your server nickname to your real name, so that everyone gets to know each other.
 
-Game on!
+Have fun!
 ChongBot:tm:
+"""
+welcomegeneral = \
+"""
+Welcome to the server {}!
+Go press the reaction buttons in <#613446760563474442> to get some roles.
 """
 kickdm = \
 """
@@ -177,6 +183,8 @@ async def on_raw_reaction_remove(data):
 @bot.event
 async def on_member_join(member):
     await member.send(welcomedm)
+    general = bot.get_channel(613779603877789717)
+    await general.send(welcomegeneral.format(member.mention))
 
 
 async def game_presence():
