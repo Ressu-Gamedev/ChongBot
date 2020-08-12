@@ -299,6 +299,11 @@ async def shutdown(ctx):
 
 
 @bot.command()
+async def ping(ctx):
+    await ctx.send("Pong")
+
+
+@bot.command()
 @commands.cooldown(1, 10)
 async def solve(ctx, *, query):
     answer = ""
