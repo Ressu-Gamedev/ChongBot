@@ -309,6 +309,16 @@ async def ping(ctx):
 @commands.cooldown(1, 10)
 async def solve(ctx, *, query):
     answer = ""
+    if query.lower() == "my life":
+        ctx.send("go study math")
+        return
+    elif query.lower() == "world hunger":
+        ctx.send("eat food")
+        return
+    elif query.lower() == "racism":
+        ctx.send("just dont be racist")
+        return
+    
     async with ctx.channel.typing():
         res = wolframclient.query(query)
         try:
