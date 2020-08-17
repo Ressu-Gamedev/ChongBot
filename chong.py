@@ -160,8 +160,10 @@ async def on_raw_reaction_add(data):
     
     await user.add_roles(*[guild.get_role(id) for id in rolelist[data.emoji.id]])
     
-    if data.emoji.id == 618689756477521920:  # Fortnite ban
+    if data.emoji.id == 618689756477521920:  # Fortnite kick
         await user.send(kickdm)
+        general = bot.get_channel(613436762257358878)
+        await general.send("{}#{} was kicked from the server for playing Fortnite".format(user.name, user.discriminator))
         await user.kick()
 
 
