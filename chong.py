@@ -302,12 +302,14 @@ async def shutdown(ctx):
 
 @bot.command()
 async def ping(ctx):
+    """Test the bot"""
     await ctx.send("Pong")
 
 
 @bot.command()
 @commands.cooldown(1, 10)
 async def solve(ctx, *, query):
+    """Solve mathematical equations and other stuff"""
     answer = ""
     if query.lower() == "my life":
         await ctx.send("go study math")
