@@ -7,37 +7,44 @@ wolframclient = wolframalpha.Client(os.environ['wolframid'])
 welcomemsg = \
 """
 This server has multiple roles you can freely enable and disable.
-Some roles will give you access to their respective channels.
+Some roles will give you access to new channels.
 Choose the roles you want by reacting to this message:
     
 <:development:613412002479734813> - Game Development
 
 <:smashball:614108654249050123> - Smash Bros
-<:ow:614108644736368659> - Overwatch
+<:mario:745352948229603389> - Mario Kart
+<:isabelle:745353571263971411> - Animal Crossing
+<:nnid:614109123373694988> - Other Nintendo Games
+
 <:csgo:614108639392825364> - CS:GO
 <:ffxiv:614108647840153640> - FFXIV (and other MMOs)
-<:league:614108654949367808> - League of Legends
-<:tft:614108654282604567> - League + TFT
+<:league:614108654949367808> - League of Legends + TFT
 <:creeper:614108636230451211> - Minecraft
 <:osu:618694109032349705> - Osu!
+<:ow:614108644736368659> - Overwatch
+<:propeller:745352948304838767> - Party games (e.g. Among Us, Jackbox, etc.)
+<:r6s:745352944613851136> - Rainbow Six: Siege
+<:rocketleague:745354308660363397> - Rocket League
+<:valorant:745352946782306384> - Valorant
+<:VR:745352948305100821> - VR Games
 <:wow:618712696509956107> - World of Warcraft
 
 <:fortnite:618689756477521920> - Fortnite
 
-<:nnid:614109123373694988> - Other Nintendo Games
 <:questionblock:618688348118319124> - Other Games
-<:ipsism:613414843734818836> - NSFW
+<:ipsism:613414843734818836> - NSFW ||haha, as if||
 
 All roles will also give you their sub-roles (e.g. Overwatch will give you both the Gamer and Overwatch roles)
-All roles are pingable. Feel free to ping an entire role to call in people to play with you!
-Have fun!
+Game roles are pingable. Feel free to ping one in <#745344915252314239> to call people to play with you.
+Enjoy your stay!
 """
 welcomedm = \
 """
 Welcome to the Ressu Gamers Discord!
 We have channels for both gaming and game development.
 Check the <#613446760563474442> channel to get your roles and access new channels.
-Please also set your server nickname to your real name, so that everyone gets to know each other.
+Please also set your server nickname to your real name, so that everyone gets to know each other :smile:
 
 Have fun!
 ChongBot:tm:
@@ -64,6 +71,16 @@ rolelist = {  # {emote1ID : [role1ID, role2ID, ...], ...}
         614067814084509697,  # Nintendo
         614067488220512256,  # Smash
     ],
+    745352948229603389 : [    # Mario
+        613426397171679272,  # Gamer
+        614067814084509697,  # Nintendo
+        745343102495096984,  # Mario Kart
+    ],
+    745353571263971411 : [    # Isabelle
+        613426397171679272,  # Gamer
+        614067814084509697,  # Nintendo
+        745350491457978479,  # Animal Crossing
+    ],
     614108644736368659 : [    # Overwatch
         613426397171679272,  # Gamer
         614066924414042123,  # Overwatch
@@ -80,11 +97,6 @@ rolelist = {  # {emote1ID : [role1ID, role2ID, ...], ...}
         613426397171679272,  # Gamer
         614066826925572097   # League 
     ],
-    614108654282604567 : [    # TFT
-        613426397171679272,  # Gamer
-        614066826925572097,  # League
-        614067306750017559,  # TFT
-    ],
     614108636230451211 : [    # Creeper
         613426397171679272,  # Gamer
         614067866609778708,  # Minecraft
@@ -92,6 +104,26 @@ rolelist = {  # {emote1ID : [role1ID, role2ID, ...], ...}
     618694109032349705 : [    # Osu
         613426397171679272,  # Gamer
         618693820778938369,  # Osu!
+    ],
+    745352948305100821 : [    # VR
+        613426397171679272,  # Gamer
+        745343430833471598,  # VR
+    ],
+    745352948304838767 : [    # Propeller
+        613426397171679272,  # Gamer
+        745342888774336512,  # Party Games
+    ],
+    745352944613851136 : [    # R6S
+        613426397171679272,  # Gamer
+        745349350984515775,  # Rainbow Six: Siege
+    ],
+    745352946782306384 : [    # Valorant
+        613426397171679272,  # Gamer
+        745349550516207739,  # Valorant
+    ],
+    745354308660363397 : [    # Rocket league
+        613426397171679272,  # Gamer
+        745349484652789861,  # Rocket League
     ],
     618712696509956107 : [    # WOW
         613426397171679272,  # Gamer
