@@ -23,7 +23,7 @@ Choose the roles you want by reacting to this message:
 <:creeper:614108636230451211> - Minecraft
 <:osu:618694109032349705> - Osu!
 <:ow:614108644736368659> - Overwatch
-<:propeller:745352948304838767> - Party games (e.g. Among Us, Jackbox, etc.)
+<:propeller:745352948304838767> - Among Us
 <:r6s:745352944613851136> - Rainbow Six: Siege
 <:rocketleague:745354308660363397> - Rocket League
 <:valorant:745352946782306384> - Valorant
@@ -111,7 +111,7 @@ rolelist = {  # {emote1ID : [role1ID, role2ID, ...], ...}
     ],
     745352948304838767 : [    # Propeller
         613426397171679272,  # Gamer
-        745342888774336512,  # Party Games
+        745342888774336512,  # Among Us
     ],
     745352944613851136 : [    # R6S
         613426397171679272,  # Gamer
