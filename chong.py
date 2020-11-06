@@ -345,20 +345,19 @@ async def solve(ctx, *, query):
     answer = ""
     if query.lower() == "my life":
         await ctx.send("go study math")
-        return
     elif query.lower() == "world hunger":
         await ctx.send("eat food")
-        return
+    elif query.lower() == "corona":
+        await ctx.send("eat HONEY and WILD MUSHROOM")
     elif query.lower() == "racism":
         await ctx.send("just dont be racist")
-        return
     
     async with ctx.channel.typing():
         res = wolframclient.query(query)
         try:
             answer = next(res.results).text
         except (AttributeError, StopIteration) as e:
-            answer = "Your query is invalid. Please try again."
+            answer = "Uh oh, something wrong."
     await ctx.send(f"Query: `{query}`\n{answer}")
 
 
