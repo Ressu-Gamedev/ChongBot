@@ -1,7 +1,9 @@
 import os, discord, wolframalpha, asyncio
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix='=')
+intents = discord.Intents.default()
+intents.members = True
+bot = commands.Bot(command_prefix='=', intents=intents)
 wolframclient = wolframalpha.Client(os.environ['wolframid'])
 
 welcomemsg = \
@@ -223,11 +225,8 @@ async def on_member_join(member):
 
 async def game_presence():
     await bot.wait_until_ready()
-    activeServers = bot.guilds
-    summ = 0
-    for s in activeServers:
-        summ += len(s.members)-1          
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{summ} students"))
+    total = bot.users
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{total} students"))
     await asyncio.sleep(3600)
     await game_presence()
 
@@ -320,6 +319,7 @@ async def moveall(ctx, tovc: discord.VoiceChannel = None, fromvc: discord.VoiceC
         tovc = discord.utils.get(ctx.guild.voice_channels, name="General")
     if fromvc == None or tovc == None:  # we go agane
         await ctx.send("Invalid command. Try joining a voice channel. Usage: =moveall [tovc] [fromvc]")
+        return
     
     for member in fromvc.members:
         await member.move_to(tovc)
@@ -356,7 +356,7 @@ async def solve(ctx, *, query):
         res = wolframclient.query(query)
         try:
             answer = next(res.results).text
-        except (AttributeError, StopIteration) as e:
+        except (AttributeError, StopIteration):
             answer = "Uh oh, something wrong."
     await ctx.send(f"Query: `{query}`\n{answer}")
 
