@@ -1,5 +1,5 @@
 import os, discord, wolframalpha, asyncio
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 intents = discord.Intents.default()
 intents.members = True
@@ -223,12 +223,15 @@ async def on_member_join(member):
     await general.send(welcomegeneral.format(member.mention))
 
 
+@tasks.loop(minutes=60)
 async def game_presence():
-    await bot.wait_until_ready()
-    total = bot.users
+    total = len(bot.users)
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=f"{total} students"))
-    await asyncio.sleep(3600)
-    await game_presence()
+
+
+@game_presence.before_loop
+async def wait():
+    await bot.wait_until_ready()
 
 
 @bot.command()
@@ -373,5 +376,5 @@ async def on_command_error(ctx, error):
 
 if __name__ == "__main__":
     TOKEN = os.environ['token']
-    bot.loop.create_task(game_presence())
+    game_presence.start()
     bot.run(TOKEN)
