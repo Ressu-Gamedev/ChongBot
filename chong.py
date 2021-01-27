@@ -347,20 +347,21 @@ async def solve(ctx, *, query):
     """Solve mathematical equations and other stuff"""
     answer = ""
     if query.lower() == "my life":
-        await ctx.send("go study math")
+        answer = "go study math"
     elif query.lower() == "world hunger":
-        await ctx.send("eat food")
+        answer = "eat food"
     elif query.lower() == "corona":
-        await ctx.send("eat HONEY and WILD MUSHROOM")
+        answer = "eat HONEY and WILD MUSHROOM"
     elif query.lower() == "racism":
-        await ctx.send("just dont be racist")
+        answer = "just dont be racist"
     
-    async with ctx.channel.typing():
-        res = wolframclient.query(query)
-        try:
-            answer = next(res.results).text
-        except (AttributeError, StopIteration):
-            answer = "Uh oh, something wrong."
+    if not answer:
+        async with ctx.channel.typing():
+            res = wolframclient.query(query)
+            try:
+                answer = next(res.results).text
+            except (AttributeError, StopIteration):
+                answer = "Uh oh, something wrong."
     await ctx.send(f"Query: `{query}`\n{answer}")
 
 
