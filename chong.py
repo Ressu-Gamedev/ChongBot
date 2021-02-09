@@ -359,22 +359,22 @@ async def solve(ctx, *, query):
         it = 1
         maximages = 2
         try:
-            try:
-                for pod in res["pod"]:
-                    if it > maximages:
-                        return
-                    it += 1
+            for pod in res["pod"]:
+                if it > maximages:
+                    return
+                it += 1
 
-                    await ctx.send("**{}**".format(pod["@title"]))
-                    if type(pod["subpod"]) == list:  # Multiple images in pod
-                        imgs = [subp["img"]["@src"] for subp in pod["subpod"]]
-                        await ctx.send("\n".join(imgs))
-                    else:
-                        await ctx.send(pod["subpod"]["img"]["@src"])
-            except KeyError:
+                await ctx.send("**{}**".format(pod["@title"]))
+                if type(pod["subpod"]) == list:  # Multiple images in pod
+                    imgs = [subp["img"]["@src"] for subp in pod["subpod"]]
+                    await ctx.send("\n".join(imgs))
+                else:
+                    await ctx.send(pod["subpod"]["img"]["@src"])
+        except:
+            try:  # Try to display only text, in case something went wrong with images
                 await ctx.send("**Input interpretation:** `{}`\n**Result:**{}".format(query, next(res.results).text))
-        except (AttributeError, StopIteration):
-            await ctx.send("**Input interpretation:** `{}`\nUh oh, something wrong.".format(query))
+            except:
+                await ctx.send("**Input interpretation:** `{}`\nUh oh, something wrong.".format(query))
 
 
 @solve.error
