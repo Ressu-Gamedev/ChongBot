@@ -364,11 +364,12 @@ async def solve(ctx, *, query):
                         return
                     it += 1
 
+                    await ctx.send("**{}**".format(pod["@title"]))
                     if type(pod["subpod"]) == list:  # Multiple images in pod
                         imgs = [subp["img"]["@src"] for subp in pod["subpod"]]
-                        await ctx.send("**{}**".format(pod["@title"]) + "\n" + "\n".join(imgs))
+                        await ctx.send("\n".join(imgs))
                     else:
-                        await ctx.send("**{}**".format(pod["@title"]) + "\n" + pod["subpod"]["img"]["@src"])
+                        await ctx.send(pod["subpod"]["img"]["@src"])
             except KeyError:
                 await ctx.send("**Input interpretation:** `{}`\n**Result:**{}".format(query, next(res.results).text))
         except (AttributeError, StopIteration):
