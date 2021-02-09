@@ -366,8 +366,8 @@ async def solve(ctx, *, query):
 
                 await ctx.send("**{}**".format(pod["@title"]))
                 if type(pod["subpod"]) == list:  # Multiple images in pod
-                    imgs = [subp["img"]["@src"] for subp in pod["subpod"]]
-                    await ctx.send("\n".join(imgs))
+                    for subp in pod["subpod"]:
+                        await ctx.send(subp["img"]["@src"])                    
                 else:
                     await ctx.send(pod["subpod"]["img"]["@src"])
         except:
