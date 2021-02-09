@@ -348,6 +348,7 @@ async def solve(ctx, *, query):
     
     eastereggs = {"my life":"go study math","world hunger":"make sure to eat!!",
     "corona":"eat HONEY and WILD MUSHROOM","racism":"ahhhhhh be nice",
+    "life":"go study math",
     "poverty":"your grandpa give you one million euro AND bill gates is your neighbour AND you win lottery"}
     if query.lower() in eastereggs:
         await ctx.send(eastereggs[query.lower()])
