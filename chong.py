@@ -370,9 +370,9 @@ async def solve(ctx, *, query):
                     else:
                         await ctx.send("**{}**".format(pod["@title"]) + "\n" + pod["subpod"]["img"]["@src"])
             except KeyError:
-                await ctx.send("**Input:** `{}`\n**Result:**{}".format(query, next(res.results).text))
+                await ctx.send("**Input interpretation:** `{}`\n**Result:**{}".format(query, next(res.results).text))
         except (AttributeError, StopIteration):
-            await ctx.send("Uh oh, something wrong.")
+            await ctx.send("**Input interpretation:** `{}`\nUh oh, something wrong.".format(query))
 
 
 @solve.error
