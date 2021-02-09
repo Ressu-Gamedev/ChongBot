@@ -342,13 +342,13 @@ async def ping(ctx):
 
 
 @bot.command()
-@commands.cooldown(1, 7)
+@commands.cooldown(1, 5)
 async def solve(ctx, *, query):
     """Solve mathematical equations and other stuff"""
     
     eastereggs = {"my life":"go study math","world hunger":"make sure to eat!!",
     "corona":"eat HONEY and WILD MUSHROOM","racism":"ahhhhhh be nice",
-    "life":"go study math",
+    "life":"go study math","bullying":"why you do that? stop",
     "poverty":"your grandpa give you one million euro AND bill gates is your neighbour AND you win lottery"}
     if query.lower() in eastereggs:
         await ctx.send(eastereggs[query.lower()])
