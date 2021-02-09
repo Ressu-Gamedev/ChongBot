@@ -342,7 +342,7 @@ async def ping(ctx):
 
 
 @bot.command()
-@commands.cooldown(1, 10)
+@commands.cooldown(1, 7)
 async def solve(ctx, *, query):
     """Solve mathematical equations and other stuff"""
     
@@ -380,7 +380,8 @@ async def solve(ctx, *, query):
 @solve.error
 async def on_command_error(ctx, error):
     if isinstance(error, commands.errors.CommandOnCooldown):
-        await ctx.send(f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s.")
+        msg = f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s."
+        await(await ctx.send(msg)).delete(delay=3)
     elif isinstance(error, commands.errors.MissingRequiredArgument):
         await ctx.send(f"Usage: `=solve <query>`")
     else:
