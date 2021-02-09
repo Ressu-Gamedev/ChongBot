@@ -342,7 +342,7 @@ async def ping(ctx):
 
 
 @bot.command()
-@commands.cooldown(1, 5)
+@commands.cooldown(1, 7.5)
 async def solve(ctx, *, query):
     """Solve mathematical equations and other stuff"""
     
