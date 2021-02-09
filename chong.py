@@ -345,24 +345,32 @@ async def ping(ctx):
 @commands.cooldown(1, 10)
 async def solve(ctx, *, query):
     """Solve mathematical equations and other stuff"""
-    answer = ""
-    if query.lower() == "my life":
-        answer = "go study math"
-    elif query.lower() == "world hunger":
-        answer = "eat food"
-    elif query.lower() == "corona":
-        answer = "eat HONEY and WILD MUSHROOM"
-    elif query.lower() == "racism":
-        answer = "just dont be racist"
     
-    if not answer:
-        async with ctx.channel.typing():
-            res = wolframclient.query(query)
-            try:
-                answer = next(res.results).text
-            except (AttributeError, StopIteration):
-                answer = "Uh oh, something wrong."
-    await ctx.send(f"Query: `{query}`\n{answer}")
+    eastereggs = {"my life":"go study math","world hunger":"make sure to eat!!",
+    "corona":"eat HONEY and WILD MUSHROOM","racism":"ahhhhhh be nice",
+    "poverty":"your grandpa give you one million euro AND bill gates is your neighbour AND you win lottery"}
+    if query.lower() in eastereggs:
+        await ctx.send(eastereggs[query.lower()])
+        return
+
+    async with ctx.channel.typing():
+        res = wolframclient.query(query)
+        it = 1
+        maximages = 2
+        try:
+            for pod in res["pod"]:
+                if it > maximages:
+                    return
+                it += 1
+
+                if type(pod["subpod"]) == list:  # Multiple images in pod
+                    imgs = [subp["img"]["@src"] for subp in pod["subpod"]]
+                    await ctx.send("**{}**".format(pod["@title"]) + "\n" + "\n".join(imgs))
+                else:
+                    await ctx.send("**{}**".format(pod["@title"]) + "\n" + pod["subpod"]["img"]["@src"])
+
+        except (AttributeError, StopIteration):
+            await ctx.send("Uh oh, something wrong.")
 
 
 @solve.error
