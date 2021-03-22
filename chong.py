@@ -346,7 +346,8 @@ async def ping(ctx):
 async def solve(ctx, *, query):
     """Solve mathematical equations and other stuff"""
     
-    eastereggs = {"my life":"go study math","world hunger":"make sure to eat!!",
+    eastereggs = {"e^pi":"9","e^π":"9",
+    "my life":"go study math","world hunger":"make sure to eat!!",
     "corona":"eat HONEY and WILD MUSHROOM","racism":"ahhhhhh be nice",
     "life":"go study math","bullying":"why you do that? stop",
     "poverty":"your grandpa give you one million euro AND bill gates is your neighbour AND you win lottery"}
