@@ -104,7 +104,7 @@ class Node:
     async def nuke(self, user, guild):
         await user.remove_roles(discord.utils.get(guild.roles, name=self.role))
         for child in self.children:
-            await child.nuke()
+            await child.nuke(user, guild)
 
 
     async def reactwith(self, fetchedwelcome, guild):
