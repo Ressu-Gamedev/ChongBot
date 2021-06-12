@@ -77,6 +77,7 @@ class Node:
     
 
     async def give(self, emote, user, guild):
+        print("Giving",self.role,self.emote)
         if self.emote == emote:
             await user.add_roles(discord.utils.get(guild.roles, name=self.role))
             return True
@@ -91,6 +92,7 @@ class Node:
         
 
     async def remove(self, emote, user, guild):
+        print("Removing",self.role,self.emote)
         if self.emote == emote:
             await user.remove_roles(discord.utils.get(guild.roles, name=self.role))
             for child in self.children:
@@ -102,6 +104,7 @@ class Node:
 
 
     async def nuke(self, user, guild):
+        print("Nuking",self.role,self.emote)
         await user.remove_roles(discord.utils.get(guild.roles, name=self.role))
         for child in self.children:
             await child.nuke(user, guild)
