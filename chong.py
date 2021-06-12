@@ -98,7 +98,7 @@ class Node:
             return
         
         for child in self.children:
-            child.remove(emote, user, guild)
+            await child.remove(emote, user, guild)
 
 
     async def nuke(self, user, guild):
