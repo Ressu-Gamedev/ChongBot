@@ -71,14 +71,8 @@ class Node:
         self.role = role
         self.children = children
 
-    
-    def iterate(self):
-        print("Node",self.role,self.emote,"Children",[child.emote for child in self.children])
-        for child in self.children:
-            child.iterate()
 
     async def give(self, emote, user, guild):
-        print("Giving",self.role,self.emote)
         if self.emote == emote:
             await user.add_roles(discord.utils.get(guild.roles, name=self.role))
             return True
@@ -93,7 +87,6 @@ class Node:
         
 
     async def remove(self, emote, user, guild, message):
-        print("Removing",self.role,self.emote)
         if self.emote == emote:
             await user.remove_roles(discord.utils.get(guild.roles, name=self.role))
             for child in self.children:
@@ -105,7 +98,6 @@ class Node:
 
 
     async def nuke(self, user, guild, message):
-        print("Nuking",self.role,self.emote)
         await user.remove_roles(discord.utils.get(guild.roles, name=self.role))
         await message.remove_reaction(discord.utils.get(guild.emojis, name=self.emote), user)
         for child in self.children:
@@ -212,12 +204,6 @@ async def on_raw_reaction_remove(data):
     welcome_message = await welcome_channel.fetch_message(data.message_id)
     
     await root.remove(data.emoji.name, user, guild, welcome_message)
-
-
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def iterate(ctx):
-    root.iterate()
 
 
 @bot.event
