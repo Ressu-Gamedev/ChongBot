@@ -71,9 +71,6 @@ class Node:
         self.role = role
         self.children = children
 
-
-    def add_children(self, *children):
-        self.children += children
     
     def iterate(self):
         print("Node",self.role,self.emote,"Children",[child.emote for child in self.children])
@@ -122,8 +119,7 @@ class Node:
             await child.reactwith(fetchedwelcome, guild)
 
 
-root = Node(None, None)
-root.add_children(
+root = Node(None, None, [
     Node("anime", "Anime"),
     Node("development", "Game Developer"),
     Node("fortnite", ""),
@@ -146,7 +142,7 @@ root.add_children(
         Node("VR", "VR"),
         Node("wow", "World of Warcraft"),
     ]),
-)
+])
 
 
 def writeID(id):
