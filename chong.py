@@ -11,31 +11,30 @@ welcomemsg = \
 This server has multiple roles you can freely enable and disable.
 Some roles will give you access to new channels.
 Choose the roles you want by reacting to this message:
-    
+
+<:questionblock:618688348118319124> - Gamer
 <:development:613412002479734813> - Game Development
+<:anime:853280193845788703> - Anime
 
+<:nnid:614109123373694988> - Nintendo Games
 <:smashball:614108654249050123> - Smash Bros
-<:mario:745352948229603389> - Mario Kart
-<:isabelle:745353571263971411> - Animal Crossing
-<:nnid:614109123373694988> - Other Nintendo Games
 
+<:amongus:774370024180678686> - Among Us (and other party games, like Jackbox)
+<:apex:853259647297388546> - Apex Legends
 <:csgo:614108639392825364> - CS:GO
-<:ffxiv:614108647840153640> - FFXIV (and other MMOs)
+<:hearthstone:853266960917463081> - Hearthstone
 <:league:614108654949367808> - League of Legends + TFT
 <:creeper:614108636230451211> - Minecraft
 <:osu:618694109032349705> - Osu!
 <:ow:614108644736368659> - Overwatch
-<:propeller:745352948304838767> - Among Us
 <:r6s:745352944613851136> - Rainbow Six: Siege
 <:rocketleague:745354308660363397> - Rocket League
+<:tetris:853263337839788042> - Tetris
 <:valorant:745352946782306384> - Valorant
 <:VR:745352948305100821> - VR Games
 <:wow:618712696509956107> - World of Warcraft
 
 <:fortnite:618689756477521920> - Fortnite
-
-<:questionblock:618688348118319124> - Other Games
-<:ipsism:613414843734818836> - NSFW ||haha, as if||
 
 All roles will also give you their sub-roles (e.g. Overwatch will give you both the Gamer and Overwatch roles)
 Game roles are pingable. Feel free to ping one in <#745344915252314239> to call people to play with you.
@@ -59,92 +58,88 @@ Go press the reaction buttons in <#613446760563474442> to get some roles.
 kickdm = \
 """
 You have been kicked from the Ressu Gamers server for the reason:
-FORTNITE IS BANNED.
+NO MORE FORTNITE!
 
 You may rejoin the server using the permanent invite link: https://discord.gg/A635RGS
 """
+general_id = 613436762257358878
 
-rolelist = {  # {emote1ID : [role1ID, role2ID, ...], ...}
-    613412002479734813 : [    # Development
-        612573197220577282,  # Game Developer
-    ],
-    614108654249050123 : [    # Smash
-        613426397171679272,  # Gamer
-        614067814084509697,  # Nintendo
-        614067488220512256,  # Smash
-    ],
-    745352948229603389 : [    # Mario
-        613426397171679272,  # Gamer
-        614067814084509697,  # Nintendo
-        745343102495096984,  # Mario Kart
-    ],
-    745353571263971411 : [    # Isabelle
-        613426397171679272,  # Gamer
-        614067814084509697,  # Nintendo
-        745350491457978479,  # Animal Crossing
-    ],
-    614108644736368659 : [    # Overwatch
-        613426397171679272,  # Gamer
-        614066924414042123,  # Overwatch
-    ],
-    614108639392825364 : [    # CS:GO
-        613426397171679272,  # Gamer
-        614067014037667851,  # CS:GO
-    ],
-    614108647840153640 : [    # FFXIV
-        613426397171679272,  # Gamer
-        614067221144272896,  # FFXIV
-    ],
-    614108654949367808 : [    # League
-        613426397171679272,  # Gamer
-        614066826925572097   # League 
-    ],
-    614108636230451211 : [    # Creeper
-        613426397171679272,  # Gamer
-        614067866609778708,  # Minecraft
-    ],
-    618694109032349705 : [    # Osu
-        613426397171679272,  # Gamer
-        618693820778938369,  # Osu!
-    ],
-    745352948305100821 : [    # VR
-        613426397171679272,  # Gamer
-        745343430833471598,  # VR
-    ],
-    745352948304838767 : [    # Propeller
-        613426397171679272,  # Gamer
-        745342888774336512,  # Among Us
-    ],
-    745352944613851136 : [    # R6S
-        613426397171679272,  # Gamer
-        745349350984515775,  # Rainbow Six: Siege
-    ],
-    745352946782306384 : [    # Valorant
-        613426397171679272,  # Gamer
-        745349550516207739,  # Valorant
-    ],
-    745354308660363397 : [    # Rocket league
-        613426397171679272,  # Gamer
-        745349484652789861,  # Rocket League
-    ],
-    618712696509956107 : [    # WOW
-        613426397171679272,  # Gamer
-        618713078204334081,  # World of Warcraft
-    ],
-    618689756477521920 : [    # Fortnite
-                             # Nothing, as it kicks the user
-    ],
-    618688348118319124 : [    # Mouse (Other Games)
-        613426397171679272,  # Gamer
-    ],
-    614109123373694988 : [    # NNID (Other Nintendo)
-        613426397171679272,  # Gamer
-        614067814084509697,  # Nintendo
-    ],
-    613414843734818836 : [    # Ipsism
-        612736383022530589,  # p
-    ],
-}
+
+class Node:
+    def __init__(self, emote, role, children=[]):
+        self.emote = emote
+        self.role = role
+        self.children = children
+
+
+    def add_children(self, *children):
+        self.children += children
+    
+
+    async def give(self, emote, user, guild):
+        if self.emote == emote:
+            await user.add_roles(discord.utils.get(guild.roles, self.role))
+            return True
+        
+        for child in self.children:
+            res = await child.give(emote, user, guild)
+            if res and self.role:
+                await user.add_roles(discord.utils.get(guild.roles, self.role))
+                return True
+        
+        return False
+        
+
+    async def remove(self, emote, user, guild):
+        if self.emote == emote:
+            await user.remove_roles(discord.utils.get(guild.roles, self.role))
+            for child in self.children:
+                await child.nuke(user, guild)
+            return
+        
+        for child in self.children:
+            child.remove(emote, user, guild)
+
+
+    async def nuke(self, user, guild):
+        await user.remove_roles(discord.utils.get(guild.roles, self.role))
+        for child in self.children:
+            await child.nuke()
+
+
+    async def reactwith(self, fetchedwelcome, guild):
+        if self.emote:
+            await fetchedwelcome.add_reaction(discord.utils.get(guild.emojis, self.emoji))
+
+        for child in self.children:
+            await child.reactwith(fetchedwelcome, guild)
+
+
+root = Node(None, None)
+root.add_children(
+    Node("anime", "Anime"),
+    Node("development", "Game Developer"),
+    Node("fortnite", ""),
+    Node("questionblock", "Gamer", [
+        Node("nnid", "Nintendo", [
+            Node("smashball", "Smash Bros"),
+        ]),
+        Node("amongus", "Among Us"),
+        Node("apex", "Apex Legends"),
+        Node("csgo", "CS:GO"),
+        Node("hearthstone", "Hearthstone"),
+        Node("league", "League of Legends"),
+        Node("creeper", "Minecraft"),
+        Node("osu", "Osu!"),
+        Node("ow", "Overwatch"),
+        Node("r6s", "Rainbow Six Siege"),
+        Node("rocketleague", "Rocket League"),
+        Node("tetris", "Tetris"),
+        Node("valorant", "Valorant"),
+        Node("VR", "VR"),
+        Node("wow", "World of Warcraft"),
+    ]),
+)
 
 
 def writeID(id):
@@ -186,19 +181,18 @@ async def on_raw_reaction_add(data):
         return
     if data.user_id == bot.user.id:
         return
-    if not data.emoji.id in rolelist:
-        return
     
     guild = await bot.fetch_guild(data.guild_id)
     user = await guild.fetch_member(data.user_id)
     
-    await user.add_roles(*[guild.get_role(id) for id in rolelist[data.emoji.id]])
-    
-    if data.emoji.id == 618689756477521920:  # Fortnite kick
+    if data.emoji.name == "fortnite":
         await user.send(kickdm)
-        general = bot.get_channel(613436762257358878)
+        general = bot.get_channel(general_id)
         await general.send("@{}#{} was kicked from the server for playing Fortnite.".format(user.name, user.discriminator))
         await user.kick()
+        return
+    
+    await root.give(data.emoji.name, user, guild)
 
 
 @bot.event
@@ -207,19 +201,17 @@ async def on_raw_reaction_remove(data):
         return
     if data.user_id == bot.user.id:
         return
-    if not data.emoji.id in rolelist:
-        return
     
     guild = await bot.fetch_guild(data.guild_id)
     user = await guild.fetch_member(data.user_id)
     
-    await user.remove_roles(*[guild.get_role(id) for id in rolelist[data.emoji.id]])
+    await root.remove(data.emoji.name, user, guild)
 
 
 @bot.event
 async def on_member_join(member):
     await member.send(welcomedm)
-    general = bot.get_channel(613436762257358878)
+    general = bot.get_channel(general_id)
     await general.send(welcomegeneral.format(member.mention))
 
 
@@ -245,8 +237,7 @@ async def welcome(ctx):
     sent = await ctx.send(welcomemsg)
     writeID(sent.id)
     
-    for emote in rolelist.keys():
-        await sent.add_reaction(await ctx.message.guild.fetch_emoji(emote))
+    await root.reactwith(sent, ctx.guild)
 
 
 @bot.command()
@@ -257,6 +248,7 @@ async def nowelcome(ctx):
         await ctx.send("There is already no welcome message.")
         return
     
+    await ctx.send("Unbound welcome message.")
     writeID(0)
 
 
@@ -271,13 +263,13 @@ async def updatewelcome(ctx):
     fetchedwelcome = await ctx.fetch_message(getID())
     await fetchedwelcome.edit(content=welcomemsg)
     
-    for emote in rolelist.keys():
-        await fetchedwelcome.add_reaction(await ctx.message.guild.fetch_emoji(emote))
+    await root.reactwith(fetchedwelcome, ctx.guild)
 
 
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def setwelcome(ctx, id):
+    await ctx.send("Set welcome to new message.")
     writeID(id)
 
 
@@ -310,6 +302,8 @@ async def pingkids(ctx):
     for kid in ctx.guild.members:
         if len(kid.roles) == 1:
             await kid.send(welcomedm)
+
+    await ctx.send("DMed all members with no role.")
 
 
 @bot.command()
@@ -348,7 +342,7 @@ async def solve(ctx, *, query):
     
     eastereggs = {"e^pi":"9","e^π":"9",
     "my life":"go study math","world hunger":"make sure to eat!!",
-    "corona":"eat HONEY and WILD MUSHROOM","racism":"ahhhhhh be nice",
+    "corona":"eat HONEY and WILD MUSHROOM","racism":"ahhhhhh please be nice :<",
     "life":"go study math","bullying":"why you do that? stop",
     "poverty":"your grandpa give you one million euro AND bill gates is your neighbour AND you win lottery"}
     if query.lower() in eastereggs:
