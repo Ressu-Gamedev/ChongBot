@@ -76,7 +76,9 @@ class Node:
         self.children += children
     
     def iterate(self):
-        print("Node",self.role,self.emote,"Children",self.children)
+        print("Node",self.role,self.emote,"Children",[child.emote for child in self.children])
+        for child in self.children:
+            child.iterate()
 
     async def give(self, emote, user, guild):
         print("Giving",self.role,self.emote)
@@ -212,10 +214,12 @@ async def on_raw_reaction_remove(data):
     
     await root.remove(data.emoji.name, user, guild)
 
+
 @bot.command()
 @commands.has_permissions(administrator=True)
 async def iterate(ctx):
     root.iterate()
+
 
 @bot.event
 async def on_member_join(member):
