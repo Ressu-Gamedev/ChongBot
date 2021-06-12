@@ -107,7 +107,7 @@ class Node:
     async def nuke(self, user, guild, message):
         print("Nuking",self.role,self.emote)
         await user.remove_roles(discord.utils.get(guild.roles, name=self.role))
-        await message.remove_reaction(discord.utils.get(guild.emojis, name=self.emoji), user)
+        await message.remove_reaction(discord.utils.get(guild.emojis, name=self.emote), user)
         for child in self.children:
             await child.nuke(user, guild, message)
 
