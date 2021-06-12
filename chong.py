@@ -78,13 +78,13 @@ class Node:
 
     async def give(self, emote, user, guild):
         if self.emote == emote:
-            await user.add_roles(discord.utils.get(guild.roles, self.role))
+            await user.add_roles(discord.utils.get(guild.roles, role=self.role))
             return True
         
         for child in self.children:
             res = await child.give(emote, user, guild)
             if res and self.role:
-                await user.add_roles(discord.utils.get(guild.roles, self.role))
+                await user.add_roles(discord.utils.get(guild.roles, role=self.role))
                 return True
         
         return False
@@ -92,7 +92,7 @@ class Node:
 
     async def remove(self, emote, user, guild):
         if self.emote == emote:
-            await user.remove_roles(discord.utils.get(guild.roles, self.role))
+            await user.add_roles(discord.utils.get(guild.roles, role=self.role))
             for child in self.children:
                 await child.nuke(user, guild)
             return
@@ -102,14 +102,14 @@ class Node:
 
 
     async def nuke(self, user, guild):
-        await user.remove_roles(discord.utils.get(guild.roles, self.role))
+        await user.add_roles(discord.utils.get(guild.roles, role=self.role))
         for child in self.children:
             await child.nuke()
 
 
     async def reactwith(self, fetchedwelcome, guild):
         if self.emote:
-            await fetchedwelcome.add_reaction(discord.utils.get(guild.emojis, self.emote))
+            await fetchedwelcome.add_reaction(discord.utils.get(guild.emojis, emoji=self.emote))
 
         for child in self.children:
             await child.reactwith(fetchedwelcome, guild)
