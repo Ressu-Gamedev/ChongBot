@@ -92,23 +92,24 @@ class Node:
         return False
         
 
-    async def remove(self, emote, user, guild):
+    async def remove(self, emote, user, guild, message):
         print("Removing",self.role,self.emote)
         if self.emote == emote:
             await user.remove_roles(discord.utils.get(guild.roles, name=self.role))
             for child in self.children:
-                await child.nuke(user, guild)
+                await child.nuke(user, guild, message)
             return
         
         for child in self.children:
-            await child.remove(emote, user, guild)
+            await child.remove(emote, user, guild, message)
 
 
-    async def nuke(self, user, guild):
+    async def nuke(self, user, guild, message):
         print("Nuking",self.role,self.emote)
         await user.remove_roles(discord.utils.get(guild.roles, name=self.role))
+        await message.remove_reaction(discord.utils.get(guild.emojis, name=self.emoji), user)
         for child in self.children:
-            await child.nuke(user, guild)
+            await child.nuke(user, guild, message)
 
 
     async def reactwith(self, fetchedwelcome, guild):
@@ -207,8 +208,10 @@ async def on_raw_reaction_remove(data):
     
     guild = await bot.fetch_guild(data.guild_id)
     user = await guild.fetch_member(data.user_id)
+    welcome_channel = bot.get_channel(data.channel_id)
+    welcome_message = await welcome_channel.fetch_message(data.message_id)
     
-    await root.remove(data.emoji.name, user, guild)
+    await root.remove(data.emoji.name, user, guild, welcome_message)
 
 
 @bot.command()
