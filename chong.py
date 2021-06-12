@@ -19,7 +19,7 @@ Choose the roles you want by reacting to this message:
 <:nnid:614109123373694988> - Nintendo Games
 <:smashball:614108654249050123> - Smash Bros
 
-<:propeller:774370024180678686> - Among Us (and other party games, like Jackbox)
+<:amongus:774370024180678686> - Among Us (and other party games, like Jackbox)
 <:apex:853259647297388546> - Apex Legends
 <:csgo:614108639392825364> - CS:GO
 <:hearthstone:853266960917463081> - Hearthstone
@@ -124,7 +124,7 @@ root.add_children(
         Node("nnid", "Nintendo", [
             Node("smashball", "Smash Bros"),
         ]),
-        Node("propeller", "Among Us"),
+        Node("amongus", "Among Us"),
         Node("apex", "Apex Legends"),
         Node("csgo", "CS:GO"),
         Node("hearthstone", "Hearthstone"),
