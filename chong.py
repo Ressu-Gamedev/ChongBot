@@ -109,7 +109,7 @@ class Node:
 
     async def reactwith(self, fetchedwelcome, guild):
         if self.emote:
-            await fetchedwelcome.add_reaction(discord.utils.get(guild.emojis, self.emoji))
+            await fetchedwelcome.add_reaction(discord.utils.get(guild.emojis, self.emote))
 
         for child in self.children:
             await child.reactwith(fetchedwelcome, guild)
