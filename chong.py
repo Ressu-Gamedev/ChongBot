@@ -171,6 +171,7 @@ async def on_message(message):
         c_b = random.randint(0, 255)
         usercolor = discord.Color((c_r << 16) + (c_g << 8) + c_b)
         msgembed = discord.Embed(color=usercolor, description=message.content)
+        embed.set_author(name=str(author), icon_url=author.avatar_url if author.avatar else author.default_avatar_url)
         modchannel = bot.get_channel(mod_id)
         await modchannel.send(f"Message from {author.id}", embed=msgembed)
         return
