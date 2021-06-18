@@ -316,7 +316,7 @@ async def dmall(ctx, *, msg):
     await ctx.send(dmwarning.format(msg))
     
     def check(reaction, user):
-        return user == ctx.author and str(reaction.emoji.name) == "fried_shrimp"
+        return user == ctx.author and str(reaction.emoji) == "fried_shrimp"
     
     try:
         await bot.wait_for('reaction_add', timeout=30.0, check=check)
@@ -325,16 +325,19 @@ async def dmall(ctx, *, msg):
         return
     
     await ctx.send("Action confirmed. Sending a DM to all users...")
-    #for victim in bot.get_all_members():
+    #for victim in ctx.guild.members:
     #    await victim.send(msg)
-    await ctx.author.send(msg + " " + " ".join(bot.get_all_members()))
+    await ctx.author.send(msg + " " + " ".join(ctx.guild.members))
     await ctx.send("Sending complete.")
 
 
 @dmall.error
 async def dmall_error(ctx, error):
-    if isinstance(error, discord.ext.commands.errors.Forbidden):
+    if isinstance(error, discord.Forbidden):
         print(f"{ctx.author} has DMs disabled.")
+    if isinstance(error, commands.errors.CommandOnCooldown):
+        msg = f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s."
+        await ctx.send(msg)
     else:
         raise(error)
 
