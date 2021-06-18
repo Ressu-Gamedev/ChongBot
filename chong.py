@@ -313,7 +313,7 @@ async def speak(ctx, *, msg):
 @commands.cooldown(1, 60)
 @commands.has_permissions(administrator=True)
 async def dmall(ctx, *, msg):
-    ctx.send(dmwarning.format(msg))
+    await ctx.send(dmwarning.format(msg))
     
     def check(reaction, user):
         return user == ctx.author and str(reaction.emoji.name) == "fried_shrimp"
