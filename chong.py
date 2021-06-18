@@ -1,4 +1,4 @@
-import os, discord, wolframalpha, asyncio
+import os, discord, wolframalpha, asyncio, random
 from discord.ext import commands, tasks
 
 intents = discord.Intents.default()
@@ -63,6 +63,7 @@ NO MORE FORTNITE!
 You may rejoin the server using the permanent invite link: https://discord.gg/A635RGS
 """
 general_id = 613436762257358878
+mod_id = 613779603877789717
 
 
 class Node:
@@ -161,6 +162,19 @@ async def on_message(message):
 
     if message.content.lower().startswith('sigma'):
         await message.channel.send('Simba')
+
+    if type(message.channel) is discord.DMChannel and not message.content.startswith(bot.command_prefix):
+        author = message.author
+        random.seed(author.id)
+        c_r = random.randint(0, 255)
+        c_g = random.randint(0, 255)
+        c_b = random.randint(0, 255)
+        usercolor = discord.Color((c_r << 16) + (c_g << 8) + c_b)
+        msgembed = discord.Embed(color=usercolor, description=message.content)
+        modchannel = bot.get_channel(modid)
+        await modchannel.send(f"Message from {author.id}", embed=msgembed)
+        return
+
         
     await bot.process_commands(message)
 
