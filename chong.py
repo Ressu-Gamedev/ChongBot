@@ -316,8 +316,7 @@ async def dmall(ctx, *, msg):
     await ctx.send(dmwarning.format(msg))
     
     def check(reaction, user):
-        print(str(reaction.emoji))
-        return user == ctx.author and str(reaction.emoji) == "fried_shrimp"
+        return user == ctx.author and str(reaction.emoji) == "🍤"
     
     try:
         await bot.wait_for('reaction_add', timeout=30.0, check=check)
