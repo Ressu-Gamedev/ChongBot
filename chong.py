@@ -64,7 +64,7 @@ You may rejoin the server using the permanent invite link: https://discord.gg/A6
 """
 dmwarning = \
 """
-Are you sure you want to direct message ***everyone*** on the server? This should only be done in exceptional circumstances.
+Are you sure you want to direct message ***everyone*** on the server? This should only be done if really needed.
 Message:
 -----------------------
 {}
@@ -325,8 +325,8 @@ async def dmall(ctx, *, msg):
         return
     
     await ctx.send("Action confirmed. Sending a DM to all users...")
-    #for victim in ctx.guild.members:
-    #    await victim.send(msg)
+    for victim in ctx.guild.members:
+        await victim.send(msg)
     await ctx.author.send(msg + " " + " ".join([victim.name for victim in ctx.guild.members]))
     await ctx.send("Sending complete.")
 
@@ -334,7 +334,7 @@ async def dmall(ctx, *, msg):
 @dmall.error
 async def dmall_error(ctx, error):
     if isinstance(error, discord.Forbidden):
-        print(f"{ctx.author} has DMs disabled.")
+        ctx.send(f"{ctx.author} has DMs disabled.")
     if isinstance(error, commands.errors.CommandOnCooldown):
         msg = f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s."
         await ctx.send(msg)
