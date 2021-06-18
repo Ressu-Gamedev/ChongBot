@@ -62,6 +62,16 @@ NO MORE FORTNITE!
 
 You may rejoin the server using the permanent invite link: https://discord.gg/A635RGS
 """
+dmwarning = \
+"""
+Are you sure you want to direct message ***everyone*** on the server? This should only be done in exceptional circumstances.
+Message:
+-----------------------
+{}
+-----------------------
+Confirm this action by reacting with the :fried_shrimp: emoji within one minute.
+"""
+
 general_id = 613436762257358878
 mod_id = 613779603877789717
 
@@ -300,6 +310,36 @@ async def speak(ctx, *, msg):
 
 
 @bot.command()
+@commands.cooldown(1, 60)
+@commands.has_permissions(administrator=True)
+async def dmall(ctx, *, msg):
+    ctx.send(dmwarning.format(msg))
+    
+    def check(reaction, user):
+        return user == ctx.author and str(reaction.emoji.name) == "fried_shrimp"
+    
+    try:
+        await bot.wait_for('reaction_add', timeout=30.0, check=check)
+    except asyncio.TimeoutError:
+        await ctx.send("Action timed out.")
+        return
+    
+    await ctx.send("Action confirmed. Sending a DM to all users...")
+    #for victim in bot.get_all_members():
+    #    await victim.send(msg)
+    await ctx.author.send(msg + " " + " ".join(bot.get_all_members()))
+    await ctx.send("Sending complete.")
+
+
+@dmall.error
+async def dmall_error(ctx, error):
+    if isinstance(error, discord.ext.commands.errors.Forbidden):
+        print(f"{ctx.author} has DMs disabled.")
+    else:
+        raise(error)
+
+
+@bot.command()
 @commands.has_permissions(administrator=True)
 async def fortnite(ctx, user: discord.User, *, message="Fortnite 🤡"):
     await ctx.send("The user {}#{} has been permanently banned for {}.".format(user.name, user.discriminator, message))
@@ -386,7 +426,7 @@ async def solve(ctx, *, query):
 
 
 @solve.error
-async def on_command_error(ctx, error):
+async def solve_error(ctx, error):
     if isinstance(error, commands.errors.CommandOnCooldown):
         msg = f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s."
         await(await ctx.send(msg)).delete(delay=3)
