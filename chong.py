@@ -181,10 +181,9 @@ async def on_message(message):
         c_b = random.randint(0, 255)
         usercolor = discord.Color((c_r << 16) + (c_g << 8) + c_b)
         msgembed = discord.Embed(color=usercolor, description=message.content)
-        msgembed.set_author(name=str(author), icon_url=author.avatar_url if author.avatar else author.default_avatar_url)
+        msgembed.set_author(name="Message from " + str(author), icon_url=author.avatar_url if author.avatar else author.default_avatar_url)
         modchannel = bot.get_channel(mod_id)
-        await modchannel.send(f"Message from {author.id}", embed=msgembed)
-        return
+        await modchannel.send("", embed=msgembed)
 
         
     await bot.process_commands(message)
@@ -313,6 +312,15 @@ async def speak(ctx, *, msg):
 @commands.has_permissions(administrator=True)
 async def dm(ctx, recipient: discord.User, *, msg):
     await recipient.send(msg)
+    random.seed(recipient.id)
+    c_r = random.randint(0, 255)
+    c_g = random.randint(0, 255)
+    c_b = random.randint(0, 255)
+    usercolor = discord.Color((c_r << 16) + (c_g << 8) + c_b)
+    msgembed = discord.Embed(color=usercolor, description=msg)
+    msgembed.set_author(name="Reply to " + str(recipient.name), icon_url=bot.user.avatar_url if bot.user.avatar else bot.user.default_avatar_url)
+    await ctx.send("", embed=msgembed)
+    await ctx.message.delete()
 
 
 @bot.command()
