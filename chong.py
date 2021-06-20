@@ -310,6 +310,12 @@ async def speak(ctx, *, msg):
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
+async def dm(ctx, recipient: discord.User, *, msg):
+    await recipient.send(msg)
+
+
+@bot.command()
 @commands.cooldown(1, 60)
 @commands.has_permissions(administrator=True)
 async def dmall(ctx, *, msg):
