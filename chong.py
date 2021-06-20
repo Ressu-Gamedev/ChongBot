@@ -318,7 +318,7 @@ async def dm(ctx, recipient: discord.User, *, msg):
     c_b = random.randint(0, 255)
     usercolor = discord.Color((c_r << 16) + (c_g << 8) + c_b)
     msgembed = discord.Embed(color=usercolor, description=msg)
-    msgembed.set_author(name="Reply to " + str(recipient.name), icon_url=bot.user.avatar_url if bot.user.avatar else bot.user.default_avatar_url)
+    msgembed.set_author(name="Reply to " + recipient.name + "#" + recipient.discriminator, icon_url=bot.user.avatar_url if bot.user.avatar else bot.user.default_avatar_url)
     await ctx.send("", embed=msgembed)
     await ctx.message.delete()
 
