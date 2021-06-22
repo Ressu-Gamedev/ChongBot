@@ -340,6 +340,8 @@ async def dmall(ctx, *, msg):
     
     await ctx.send("Action confirmed. Sending a DM to all users...")
     for victim in bot.get_all_members():
+        if victim == bot.user:
+            continue
         await victim.send(msg)
     await ctx.send("Sending complete.")
 
