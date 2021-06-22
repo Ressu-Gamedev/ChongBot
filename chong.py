@@ -339,9 +339,8 @@ async def dmall(ctx, *, msg):
         return
     
     await ctx.send("Action confirmed. Sending a DM to all users...")
-    for victim in ctx.guild.members:
+    for victim in bot.get_all_members():
         await victim.send(msg)
-    await ctx.author.send(msg + " " + " ".join([victim.name for victim in ctx.guild.members]))
     await ctx.send("Sending complete.")
 
 
