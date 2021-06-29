@@ -415,7 +415,7 @@ async def solve(ctx, *, query):
 
 @bot.command()
 @commands.cooldown(1, 7.5)
-async def solven(ctx, n, *, query):
+async def solven(ctx, n: int, *, query):
     """
     Solve mathematical equations and other stuff
     n is the number of result frames (WolframAlpha panels) to show
