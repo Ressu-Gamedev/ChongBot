@@ -410,6 +410,16 @@ async def ping(ctx):
 @commands.cooldown(1, 7.5)
 async def solve(ctx, *, query):
     """Solve mathematical equations and other stuff"""
+    await solven(ctx, 2, query)
+
+
+@bot.command()
+@commands.cooldown(1, 7.5)
+async def solven(ctx, n, *, query):
+    """
+    Solve mathematical equations and other stuff
+    n is the number of result frames (WolframAlpha panels) to show
+    """
     
     eastereggs = {"e^pi":"9","e^π":"9",
     "my life":"go study math","world hunger":"make sure to eat!!",
@@ -423,10 +433,9 @@ async def solve(ctx, *, query):
     async with ctx.channel.typing():
         res = wolframclient.query(query)
         it = 1
-        maximages = 2
         try:
             for pod in res["pod"]:
-                if it > maximages:
+                if it > n:
                     return
                 it += 1
 
