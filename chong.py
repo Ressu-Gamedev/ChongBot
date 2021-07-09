@@ -349,7 +349,7 @@ async def dmall(ctx, *, msg):
 @dmall.error
 async def dmall_error(ctx, error):
     if isinstance(error, discord.Forbidden) or isinstance(error, discord.errors.HTTPException):
-        ctx.send(f"{ctx.author} has DMs disabled.")
+        print(f"{ctx.author} has DMs disabled.")
     if isinstance(error, commands.errors.CommandOnCooldown):
         msg = f"{ctx.message.author.mention} This command was used {error.cooldown.per - error.retry_after:.2f}s ago and is on cooldown. Try again in {error.retry_after:.2f}s."
         await ctx.send(msg)
