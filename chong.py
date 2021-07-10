@@ -66,9 +66,9 @@ dmwarning = \
 """
 Are you sure you want to direct message ***everyone*** on the server? This should only be done if really needed.
 Message:
------------------------
+------------------------
 {}
------------------------
+------------------------
 Confirm this action by reacting with the :fried_shrimp: emoji within one minute.
 """
 
